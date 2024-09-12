@@ -1,0 +1,38 @@
+########################################################################################################################################################################################
+# Build and publish github action
+########################################################################################################################################################################################
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - 'master'
+  
+name: Build
+jobs:    
+  ####################################################################################
+  #                 Build & Deploy to Prod -  when merged to master                  #
+  ####################################################################################
+  build-publish-prod:
+    name: Build and Publish
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build Container
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            ghcr.io/abusix/kubectl-aws-eks:latest
+            ghcr.io/abusix/kubectl-aws-eks:${{ github.sha }}

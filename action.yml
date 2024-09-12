@@ -1,6 +1,6 @@
 name: kubectl-apply-action
 description: "run kubectl in github action"
-author: 'neosec'
+author: 'abusix'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/abusix/kubectl-aws-eks:latest'
